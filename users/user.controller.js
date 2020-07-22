@@ -1,7 +1,4 @@
-const express = require('express')
 const userService = require('./user.service')
-const router = express.Router()
-const auth = require('../middleware/auth')
 
 const authenticate = async (req, res, next) => {
   try {
@@ -34,8 +31,48 @@ const getCurrent = async (req, res, next) => {
   }
 }
 
-router.post('/authenticate', authenticate)
-router.post('/register', register)
-router.get('/me', auth, getCurrent)
+const getById = async (req, res, next) => {
+  try {
+    const user = await userService.getById(req.params.id)
+    user ? res.send(user) : res.sendStatus(404)
+  } catch (err) {
+    next(err)
+  }
+}
 
-module.exports = router
+const getAll = async (req, res, next) => {
+  try {
+    const users = await userService.getAll()
+    res.send(users)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const update = async (req, res, next) => {
+  try {
+    userService.update(req.params.id, req.body)
+    res.send('Updated sucessfully')
+  } catch (err) {
+    next(err)
+  }
+}
+
+const _delete = async (req, res, next) => {
+  try {
+    userService.delete(req.params.id)
+    req.send('Deleted sucessfully')
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = {
+  authenticate,
+  register,
+  getCurrent,
+  getAll,
+  getById,
+  update,
+  _delete,
+}

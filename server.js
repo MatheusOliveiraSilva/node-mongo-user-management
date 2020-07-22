@@ -9,7 +9,7 @@ if (!config.get('jwtPrivateKey')) {
 
 const app = express()
 
-const users = require('./users/user.controller')
+const users = require('./routes/users')
 const secure = require('./secure_content/content')
 
 app.use(express.json())
